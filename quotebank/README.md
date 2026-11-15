@@ -56,8 +56,9 @@ How a submission flows:
 One-time setup: set `REPO` in `quotebank.py`, and create the labels
 `quote-submission`, `needs-fix`, `ready-for-review` and `approved`.
 
-After editing `themes.txt` or `tags.txt`, run `python scripts/build_issue_template.py` and
-commit the regenerated form. Run `python quotebank.py validate` before merging any pull request
+After editing `quotebank/themes.txt` or `quotebank/tags.txt`, run
+`python quotebank/scripts/build_issue_template.py` from the repository root and commit
+the regenerated root-level `.github/ISSUE_TEMPLATE/submit-quote.yml` form. Run `python quotebank.py validate` before merging any pull request
 that touches the data files (a workflow also does this automatically).
 `scripts/migrate_xlsx.py` was used once to import the original Excel workbook.
 

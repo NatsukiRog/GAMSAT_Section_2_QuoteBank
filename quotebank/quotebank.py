@@ -28,7 +28,7 @@ REPO = "NatsukiRog/GAMSAT_Section_2_QuoteBank"
 BRANCH = "main"
 # -----------------------------------------------------------------------------
 
-RAW_BASE = f"https://raw.githubusercontent.com/{REPO}/{BRANCH}/"
+RAW_BASE = f"https://raw.githubusercontent.com/{REPO}/{BRANCH}/quotebank/"
 ISSUE_URL = f"https://github.com/{REPO}/issues/new"
 DATA_FILES = ["quotes.csv", "themes.txt", "tags.txt"]
 CACHE_DIR = Path.home() / ".quotebank"

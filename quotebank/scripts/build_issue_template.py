@@ -6,8 +6,9 @@ dropdowns stay in sync. Field ids must match the parameters quotebank.py submits
 """
 import json, pathlib
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
-lines = lambda n: [l.strip() for l in (ROOT / n).read_text(encoding="utf-8").splitlines() if l.strip()]
+DATA = pathlib.Path(__file__).resolve().parent.parent
+REPO = DATA.parent
+lines = lambda n: [l.strip() for l in (DATA / n).read_text(encoding="utf-8").splitlines() if l.strip()]
 themes, tags = lines("themes.txt"), lines("tags.txt")
 q = json.dumps  # JSON strings are valid YAML scalars, so commas in theme names are safe
 
@@ -53,7 +54,7 @@ y += ["  - type: checkboxes", "    id: agreement", "    attributes:", '      lab
       '        - label: "I agree my contribution is released under CC BY-SA 4.0, and I have checked the source."',
       "          required: true"]
 
-out = ROOT / ".github" / "ISSUE_TEMPLATE" / "submit-quote.yml"
+out = REPO / ".github" / "ISSUE_TEMPLATE" / "submit-quote.yml"
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text("\n".join(y) + "\n", encoding="utf-8")
-print("Wrote", out.relative_to(ROOT))
+print("Wrote", out.relative_to(REPO))
