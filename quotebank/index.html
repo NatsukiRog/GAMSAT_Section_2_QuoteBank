@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GAMSAT Section 2 Quote Bank</title>
-<meta name="description" content="Free community quote bank for GAMSAT Section 2 essay practice. Get a random set of four quotes sharing one theme.">
+<meta name="description" content="Free community quote bank for GAMSAT Section 2 essay practice. Get a random set of four quotes from selected themes.">
 <style>
 :root{--bg:#f3f5f7;--ink:#14202b;--mute:#566574;--line:#d6dce2;--acc:#2a4fd6;--accink:#fff;--chip:#e4e9f7;--err:#b3261e}
 @media(prefers-color-scheme:dark){:root{--bg:#10161c;--ink:#e6ebf0;--mute:#93a1ae;--line:#26323d;--acc:#8aa4ff;--accink:#0b1230;--chip:#1c2740;--err:#ff8a80}}
@@ -19,7 +19,15 @@ nav button[aria-selected=true]{color:var(--ink);border-color:var(--acc)}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:22px}
 label{display:flex;flex-direction:column;font-size:.85rem;color:var(--mute);gap:4px;flex:1 1 180px}
+.field{display:flex;flex-direction:column;font-size:.85rem;color:var(--mute);gap:4px;flex:1 1 180px}
 select,input,textarea{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%}
+.theme-select{position:relative;margin:0;font-size:1rem}
+.theme-select>summary{list-style:none;cursor:pointer;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:9px 10px}
+.theme-select>summary::-webkit-details-marker{display:none}
+.theme-select>summary::after{content:"▾";float:right;color:var(--mute)}
+.theme-options{position:absolute;z-index:5;top:calc(100% + 4px);left:0;right:0;max-height:280px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.18);padding:6px}
+.theme-options label{display:flex;flex-direction:row;align-items:center;gap:8px;flex:none;padding:6px 8px;color:var(--ink);font-size:.9rem;cursor:pointer}
+.theme-options input{width:auto;margin:0}
 textarea{min-height:84px;resize:vertical}
 .btn{background:var(--acc);color:var(--accink);border:0;border-radius:6px;font:inherit;font-weight:600;padding:10px 20px;cursor:pointer}
 .btn.ghost{background:none;color:var(--acc);border:1px solid var(--acc)}
@@ -57,7 +65,7 @@ footer{margin-top:40px;color:var(--mute);font-size:.82rem}
 <section id="practice" hidden>
 <div class="bar">
 <label>Task<select id="pt"><option>Random</option><option>Task A</option><option>Task B</option></select></label>
-<label>Theme<select id="pth"></select></label>
+<div class="field"><span id="theme-label">Theme</span><details class="theme-select"><summary id="theme-summary" aria-label="Theme: Random (all themes)">Random (all themes)</summary><div id="pth" class="theme-options" role="group" aria-labelledby="theme-label"></div></details></div>
 <button class="btn" id="go">New set</button>
 </div>
 <div id="set" aria-live="polite"></div>
@@ -130,14 +138,13 @@ ${r.source?`<div class="src">${link(r.source)}</div>`:""}
 ${full&&extra.length?`<details><summary>Essay notes</summary>${extra.map(x=>`<p><b>${x[0]}:</b> ${esc(x[1])}</p>`).join("")}</details>`:""}</figcaption></figure>`}
 
 function practice(){
-const task=$("#pt").value,th=$("#pth").value,out=$("#set");
+const task=$("#pt").value,selection=[...$("#pth").querySelectorAll("input:checked")].map(x=>x.value),out=$("#set");
 const tasks=task==="Random"?["Task A","Task B"]:[task];
-const themes=th==="Random"?[...new Set(Q.map(r=>r.primary_theme))]:[th];
-const groups=[];
-for(const t of tasks)for(const h of themes){const p=Q.filter(r=>r.primary_theme===h&&fits(r,t));if(p.length>=4)groups.push([t,h,p])}
-if(!groups.length){out.innerHTML=`<p class="msg">No set of four is available yet for this choice. A set needs four quotes sharing a theme and suited to the task, and quotes marked Both count for either. Try Random, or <a href="#submit">add a quote</a>.</p>`;return}
-const[t,h,p]=pick(groups);
-out.innerHTML=`<div class="set"><h2>${esc(h)}</h2><p class="meta">${t} · 4 of ${p.length} matching quotes</p>${shuffle(p).slice(0,4).map(r=>quote(r,false)).join("")}</div><p class="hint">Use the shared theme as your starting point. You can respond to one or more quotes; you do not need to address all four.</p>`}
+if(!selection.length){out.innerHTML=`<p class="msg">Select at least one theme to generate a set.</p>`;return}
+const allThemes=selection.includes("__all__"),themes=new Set(selection),groups=tasks.map(t=>[t,Q.filter(r=>(allThemes||themes.has(r.primary_theme))&&fits(r,t))]).filter(([,p])=>p.length>=4);
+if(!groups.length){out.innerHTML=`<p class="msg">No set of four is available yet for this choice. Try selecting other themes, or <a href="#submit">add a quote</a>.</p>`;return}
+const[t,p]=pick(groups),multiple=allThemes||themes.size>1,h=allThemes?"All themes":themes.size>1?"Selected themes":selection[0],source=allThemes?"from all themes":themes.size>1?"from your selected themes":"from this theme";
+out.innerHTML=`<div class="set"><h2>${esc(h)}</h2><p class="meta">${t} · 4 of ${p.length} matching quotes</p>${shuffle(p).slice(0,4).map(r=>quote(r,multiple)).join("")}</div><p class="hint">Use the quotes ${source} as your starting point. You can respond to one or more quotes; you do not need to address all four.</p>`}
 
 function browse(){
 const k=$("#bk").value.trim().toLowerCase(),t=$("#bt").value,h=$("#bth").value;
@@ -174,10 +181,13 @@ Q=Q.filter(r=>r.quote.trim());
 }catch(e){$("#count").innerHTML=`<span class="err">Could not load the quote bank. Check your connection and reload.</span>`;return}
 $("#count").textContent=`${Q.length} quotes across ${T.length} themes. Free, and built by students.`;
 const opts=(a,first)=>(first?[first]:[]).concat(a).map(x=>`<option>${esc(x)}</option>`).join("");
-$("#pth").innerHTML=opts(T,"Random");$("#bth").innerHTML=opts(T,"All");$("#sth").innerHTML=opts(T);
+$("#pth").innerHTML=[["__all__","Random (all themes)"],...T.map(t=>[t,t])].map(([value,label],i)=>`<label><input type="checkbox" value="${esc(value)}"${i===0?" checked":""}${i===0?' data-random="true"':""}> ${esc(label)}</label>`).join("");
+$("#bth").innerHTML=opts(T,"All");$("#sth").innerHTML=opts(T);
+const updateThemeSummary=()=>{const selected=[...$("#pth").querySelectorAll("input:checked")],random=selected.some(x=>x.dataset.random),text=random?"Random (all themes)":selected.length===1?selected[0].parentElement.textContent.trim():selected.length?`${selected.length} themes selected`:"Select themes",summary=$("#theme-summary");summary.textContent=text;summary.setAttribute("aria-label",`Theme: ${text}`);summary.title=selected.map(x=>x.parentElement.textContent.trim()).join(", ")};
+$("#pth").addEventListener("change",e=>{if(e.target.dataset.random==="true"&&e.target.checked)$("#pth").querySelectorAll("input:not([data-random])").forEach(x=>x.checked=false);else if(e.target.checked)$("#pth [data-random]").checked=false;updateThemeSummary();practice()});
 $("#tags").innerHTML=G.map(t=>`<label><input type="checkbox" value="${esc(t)}"> ${esc(t)}</label>`).join("");
 $("#tags").addEventListener("change",()=>{const n=document.querySelectorAll("#tags input:checked").length;document.querySelectorAll("#tags input:not(:checked)").forEach(x=>x.disabled=n>=3)});
-$("#go").onclick=practice;$("#pt").onchange=$("#pth").onchange=practice;
+$("#go").onclick=practice;$("#pt").onchange=practice;
 ["bk","bt","bth"].forEach(i=>$("#"+i).addEventListener("input",browse));
 $("#f").addEventListener("submit",submit);
 $("#repo").href=`https://github.com/${REPO}`;
