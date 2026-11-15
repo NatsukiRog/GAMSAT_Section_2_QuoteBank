@@ -26,83 +26,39 @@ body:
       description: "Book, speech, page number or link. Unsourced quotes are often misattributed."
     validations:
       required: true
-  - type: dropdown
+  - type: input
     id: theme
     attributes:
       label: "Primary theme"
-      options:
-        - "Power, politics and authority"
-        - "Society, inequality and class"
-        - "Justice, morality and ethics"
-        - "Technology, science and progress"
-        - "Environment and humanity"
-        - "Culture, identity and community"
-        - "Education, knowledge and truth"
-        - "Happiness, fulfilment and purpose"
-        - "Success, ambition and failure"
-        - "Relationships, love and belonging"
-        - "Human nature and psychology"
-        - "Suffering, adversity and resilience"
-        - "Change, uncertainty and time"
-        - "Individuality, freedom and identity"
+      description: "Pre-filled from the website. Must match one of the listed themes."
     validations:
       required: true
-  - type: dropdown
+  - type: input
     id: task
     attributes:
       label: "Section suitability"
-      options:
-        - "Task A"
-        - "Task B"
-        - "Both"
+      description: "Pre-filled from the website: Task A, Task B or Both."
     validations:
       required: true
-  - type: dropdown
+  - type: input
     id: tag_1
     attributes:
       label: "Secondary tag 1"
-      description: "Optional."
-      options:
-        - "Individual vs society"
-        - "Optimism vs pessimism"
-        - "Nature vs nurture"
-        - "Past vs future"
-        - "Means vs ends"
-        - "Freedom vs security"
-        - "Self vs others"
-        - "Appearance vs reality"
+      description: "Optional. Pre-filled from the website."
     validations:
       required: false
-  - type: dropdown
+  - type: input
     id: tag_2
     attributes:
       label: "Secondary tag 2"
-      description: "Optional."
-      options:
-        - "Individual vs society"
-        - "Optimism vs pessimism"
-        - "Nature vs nurture"
-        - "Past vs future"
-        - "Means vs ends"
-        - "Freedom vs security"
-        - "Self vs others"
-        - "Appearance vs reality"
+      description: "Optional. Pre-filled from the website."
     validations:
       required: false
-  - type: dropdown
+  - type: input
     id: tag_3
     attributes:
       label: "Secondary tag 3"
-      description: "Optional."
-      options:
-        - "Individual vs society"
-        - "Optimism vs pessimism"
-        - "Nature vs nurture"
-        - "Past vs future"
-        - "Means vs ends"
-        - "Freedom vs security"
-        - "Self vs others"
-        - "Appearance vs reality"
+      description: "Optional. Pre-filled from the website."
     validations:
       required: false
   - type: textarea

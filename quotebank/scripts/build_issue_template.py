@@ -40,10 +40,17 @@ y += text("textarea", "quote", "Quote", True, "Without surrounding quotation mar
 y += text("input", "author", "Author", True)
 y += text("input", "source", "Source / URL", True,
           "Book, speech, page number or link. Unsourced quotes are often misattributed.")
-y += dropdown("theme", "Primary theme", themes, True)
-y += dropdown("task", "Section suitability", ["Task A", "Task B", "Both"], True)
+# GitHub's URL-prefill support is reliable for text fields. Dropdown fields
+# do not consistently accept query-string prefills, so keep these as text
+# inputs. The importer still validates every value against themes.txt,
+# TASKS and tags.txt before a quote can be approved for CSV import.
+y += text("input", "theme", "Primary theme", True,
+          "Pre-filled from the website. Must match one of the listed themes.")
+y += text("input", "task", "Section suitability", True,
+          "Pre-filled from the website: Task A, Task B or Both.")
 for i in (1, 2, 3):
-    y += dropdown(f"tag_{i}", f"Secondary tag {i}", tags, False, "Optional.")
+    y += text("input", f"tag_{i}", f"Secondary tag {i}", False,
+              "Optional. Pre-filled from the website.")
 y += text("textarea", "interpretation", "Interpretation", False, "Optional.")
 y += text("textarea", "opposing", "Opposing perspective", False, "Optional.")
 y += text("textarea", "example", "Example / evidence", False, "Optional.")
