@@ -1,0 +1,48 @@
+# Runs when someone submits (or edits) a quote issue. Checks it and labels it;
+# it never changes quotes.csv.
+name: Check quote submission
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    if: contains(github.event.issue.labels.*.name, 'quote-submission')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - id: check
+        run: python3 scripts/import_issue.py check
+        env:
+          # passed as environment variables, never pasted into the shell command
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+
+      - name: Needs fixing
+        if: steps.check.outputs.status == 'invalid'
+        run: |
+          gh issue comment "$NUMBER" --body-file comment.md
+          gh issue edit "$NUMBER" --add-label needs-fix
+          gh issue edit "$NUMBER" --remove-label ready-for-review || true
+
+      - name: Ready for review
+        if: steps.check.outputs.status == 'valid'
+        run: |
+          gh issue edit "$NUMBER" --add-label ready-for-review
+          gh issue edit "$NUMBER" --remove-label needs-fix || true
+          if [ "${{ github.event.action }}" = "opened" ]; then
+            gh issue comment "$NUMBER" --body-file comment.md
+          fi

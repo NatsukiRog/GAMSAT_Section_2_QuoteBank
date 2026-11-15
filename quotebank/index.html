@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GAMSAT Section 2 Quote Bank</title>
+<meta name="description" content="Free community quote bank for GAMSAT Section 2 essay practice. Get a random set of four quotes sharing one theme.">
+<style>
+:root{--bg:#f3f5f7;--ink:#14202b;--mute:#566574;--line:#d6dce2;--acc:#2a4fd6;--accink:#fff;--chip:#e4e9f7;--err:#b3261e}
+@media(prefers-color-scheme:dark){:root{--bg:#10161c;--ink:#e6ebf0;--mute:#93a1ae;--line:#26323d;--acc:#8aa4ff;--accink:#0b1230;--chip:#1c2740;--err:#ff8a80}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:24px 18px 64px}
+h1{font:600 1.45rem/1.25 Georgia,"Iowan Old Style",serif;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 20px}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px}
+nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:inherit;font-weight:600;padding:10px 14px;cursor:pointer}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--acc)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:22px}
+label{display:flex;flex-direction:column;font-size:.85rem;color:var(--mute);gap:4px;flex:1 1 180px}
+select,input,textarea{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%}
+textarea{min-height:84px;resize:vertical}
+.btn{background:var(--acc);color:var(--accink);border:0;border-radius:6px;font:inherit;font-weight:600;padding:10px 20px;cursor:pointer}
+.btn.ghost{background:none;color:var(--acc);border:1px solid var(--acc)}
+.set h2{font:600 1.05rem/1.4 system-ui,sans-serif;margin:0 0 4px}
+.meta{color:var(--mute);font-size:.9rem;margin:0 0 8px}
+.q{margin:0;padding:22px 0;border-top:1px solid var(--line)}
+.q blockquote{margin:0 0 8px;font:1.3rem/1.5 Georgia,"Iowan Old Style",serif}
+.q figcaption{color:var(--mute);font-size:.92rem}
+.q figcaption b{color:var(--ink);font-weight:600}
+.chip{display:inline-block;background:var(--chip);border-radius:99px;padding:1px 10px;font-size:.8rem;margin:2px 4px 2px 0;color:var(--ink)}
+.src{font-size:.85rem;margin-top:4px;word-break:break-word}
+a{color:var(--acc)}
+details{margin-top:8px;font-size:.92rem}
+.hint{color:var(--mute);border-top:1px solid var(--line);padding-top:16px;margin-top:0}
+.msg{padding:16px;border:1px dashed var(--line);border-radius:8px;color:var(--mute)}
+.err{color:var(--err)}
+fieldset{border:1px solid var(--line);border-radius:6px;margin:14px 0}
+fieldset label{flex-direction:row;align-items:center;color:var(--ink);font-size:.95rem;gap:8px;padding:2px 0}
+fieldset input{width:auto}
+form>label{margin-bottom:14px;flex:none}
+footer{margin-top:40px;color:var(--mute);font-size:.82rem}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>GAMSAT Section 2 Quote Bank</h1>
+<p class="sub" id="count">Loading quotes…</p>
+<nav role="tablist">
+<button role="tab" data-t="practice">Practice</button>
+<button role="tab" data-t="browse">Browse</button>
+<button role="tab" data-t="submit">Add a quote</button>
+</nav>
+
+<section id="practice" hidden>
+<div class="bar">
+<label>Task<select id="pt"><option>Random</option><option>Task A</option><option>Task B</option></select></label>
+<label>Theme<select id="pth"></select></label>
+<button class="btn" id="go">New set</button>
+</div>
+<div id="set" aria-live="polite"></div>
+</section>
+
+<section id="browse" hidden>
+<div class="bar">
+<label>Search<input id="bk" type="search" placeholder="Word, author or source"></label>
+<label>Task<select id="bt"><option>All</option><option>Task A</option><option>Task B</option><option>Both</option></select></label>
+<label>Theme<select id="bth"></select></label>
+</div>
+<p class="meta" id="bc"></p>
+<div id="list"></div>
+</section>
+
+<section id="submit" hidden>
+<p class="sub">Your quote opens as a pre-filled GitHub issue. Check it, tick the licence box and press <b>Submit new issue</b>. You need a free GitHub account.</p>
+<form id="f">
+<label>Quote<textarea id="sq" required></textarea></label>
+<label>Author<input id="sa" required></label>
+<label>Source (book, speech, page or link)<input id="ss" required></label>
+<label>Primary theme<select id="sth" required></select></label>
+<label>Suitable for<select id="stk"><option>Task A</option><option>Task B</option><option>Both</option></select></label>
+<fieldset><legend>Secondary tags (up to 3)</legend><div id="tags"></div></fieldset>
+<details><summary>Add your own essay notes (optional)</summary>
+<label>Interpretation<textarea id="o_interpretation"></textarea></label>
+<label>Opposing perspective<textarea id="o_opposing"></textarea></label>
+<label>Example / evidence<textarea id="o_example"></textarea></label>
+<label>Notes<textarea id="o_notes"></textarea></label>
+</details>
+<p><button class="btn" type="submit">Open GitHub form</button></p>
+<p class="meta" id="sm"></p>
+</form>
+</section>
+
+<footer>
+An independent community resource, not affiliated with ACER. Quotes remain the property of their authors.
+Code is MIT, data is CC BY-SA 4.0.
+<a id="repo" href="#">View on GitHub</a>
+</footer>
+</div>
+
+<script>
+const REPO="NatsukiRog/GAMSAT_Section_2_QuoteBank",BRANCH="main";
+const RAW=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
+const $=s=>document.querySelector(s);
+let Q=[],T=[],G=[];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fits=(r,t)=>r.task===""||r.task==="Both"||r.task===t;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+async function get(n){for(const u of[RAW+n,n]){try{const r=await fetch(u);if(r.ok)return await r.text()}catch(e){}}throw new Error("Could not load "+n)}
+function csv(t){const rows=[];let r=[],f="",q=false;
+for(let i=0;i<t.length;i++){const c=t[i];
+if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+else if(c=='"')q=true;else if(c==","){r.push(f);f=""}
+else if(c=="\n"||c=="\r"){if(c=="\r"&&t[i+1]=="\n")i++;r.push(f);f="";if(r.length>1||r[0]!=="")rows.push(r);r=[]}
+else f+=c}
+if(f!==""||r.length){r.push(f);rows.push(r)}
+const h=rows.shift();return rows.map(x=>Object.fromEntries(h.map((k,i)=>[k,x[i]||""])))}
+const lines=t=>t.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+
+function link(s){return/^https?:\/\//.test(s)?`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s)}</a>`:esc(s)}
+function quote(r,full){
+const tags=r.secondary_tags?r.secondary_tags.split(",").map(t=>`<span class="chip">${esc(t.trim())}</span>`).join(""):"";
+const extra=[["Interpretation",r.interpretation],["Opposing perspective",r.opposing_perspective],["Example",r.example],["Notes",r.notes]].filter(x=>x[1]);
+return`<figure class="q"><blockquote>“${esc(r.quote)}”</blockquote><figcaption><b>${esc(r.author||"Unknown")}</b> <span class="chip">${esc(r.task||"Both")}</span>${full?`<span class="chip">${esc(r.primary_theme)}</span>`:""}${full?tags:""}
+${r.source?`<div class="src">${link(r.source)}</div>`:""}
+${full&&extra.length?`<details><summary>Essay notes</summary>${extra.map(x=>`<p><b>${x[0]}:</b> ${esc(x[1])}</p>`).join("")}</details>`:""}</figcaption></figure>`}
+
+function practice(){
+const task=$("#pt").value,th=$("#pth").value,out=$("#set");
+const tasks=task==="Random"?["Task A","Task B"]:[task];
+const themes=th==="Random"?[...new Set(Q.map(r=>r.primary_theme))]:[th];
+const groups=[];
+for(const t of tasks)for(const h of themes){const p=Q.filter(r=>r.primary_theme===h&&fits(r,t));if(p.length>=4)groups.push([t,h,p])}
+if(!groups.length){out.innerHTML=`<p class="msg">No set of four is available yet for this choice. A set needs four quotes sharing a theme and suited to the task, and quotes marked Both count for either. Try Random, or <a href="#submit">add a quote</a>.</p>`;return}
+const[t,h,p]=pick(groups);
+out.innerHTML=`<div class="set"><h2>${esc(h)}</h2><p class="meta">${t} · 4 of ${p.length} matching quotes</p>${shuffle(p).slice(0,4).map(r=>quote(r,false)).join("")}</div><p class="hint">Use the shared theme as your starting point. You can respond to one or more quotes; you do not need to address all four.</p>`}
+
+function browse(){
+const k=$("#bk").value.trim().toLowerCase(),t=$("#bt").value,h=$("#bth").value;
+const m=Q.filter(r=>{
+if(k&&!["quote","author","source","primary_theme","secondary_tags","interpretation","opposing_perspective","example","notes"].some(f=>r[f].toLowerCase().includes(k)))return false;
+if(t==="Both"&&r.task!=="Both")return false;
+if((t==="Task A"||t==="Task B")&&!fits(r,t))return false;
+return h==="All"||r.primary_theme===h});
+$("#bc").textContent=`${m.length} matching quote${m.length==1?"":"s"}`;
+$("#list").innerHTML=m.length?m.map(r=>quote(r,true)).join(""):`<p class="msg">No quotes match. Try a broader word or reset the filters.</p>`}
+
+function submit(e){
+e.preventDefault();
+const tags=[...document.querySelectorAll("#tags input:checked")].map(x=>x.value);
+const p={template:"submit-quote.yml",title:"Quote: "+$("#sa").value.trim(),quote:$("#sq").value.trim().replace(/^[“"]+|[”"]+$/g,""),author:$("#sa").value.trim(),source:$("#ss").value.trim(),theme:$("#sth").value,task:$("#stk").value};
+tags.forEach((t,i)=>p["tag_"+(i+1)]=t);
+const opt={};["interpretation","opposing","example","notes"].forEach(k=>{const v=$("#o_"+k).value.trim();if(v)opt[k]=v});
+const url=o=>`https://github.com/${REPO}/issues/new?`+new URLSearchParams({...p,...o});
+let u=url(opt),m="";
+if(u.length>7500){u=url({});m="Your essay notes were too long to pre-fill. Paste them into the GitHub form yourself."}
+window.open(u,"_blank","noopener");
+$("#sm").textContent=m||"GitHub opened in a new tab. Tick the licence box and press Submit new issue."}
+
+function show(t){
+for(const s of["practice","browse","submit"])$("#"+s).hidden=s!==t;
+document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));
+if(t==="practice"&&!$("#set").innerHTML)practice()}
+const tab=()=>show(["practice","browse","submit"].includes(location.hash.slice(1))?location.hash.slice(1):"practice");
+
+(async()=>{
+try{
+[Q,T,G]=await Promise.all([get("quotes.csv").then(csv),get("themes.txt").then(lines),get("tags.txt").then(lines)]);
+Q=Q.filter(r=>r.quote.trim());
+}catch(e){$("#count").innerHTML=`<span class="err">Could not load the quote bank. Check your connection and reload.</span>`;return}
+$("#count").textContent=`${Q.length} quotes across ${T.length} themes. Free, and built by students.`;
+const opts=(a,first)=>(first?[first]:[]).concat(a).map(x=>`<option>${esc(x)}</option>`).join("");
+$("#pth").innerHTML=opts(T,"Random");$("#bth").innerHTML=opts(T,"All");$("#sth").innerHTML=opts(T);
+$("#tags").innerHTML=G.map(t=>`<label><input type="checkbox" value="${esc(t)}"> ${esc(t)}</label>`).join("");
+$("#tags").addEventListener("change",()=>{const n=document.querySelectorAll("#tags input:checked").length;document.querySelectorAll("#tags input:not(:checked)").forEach(x=>x.disabled=n>=3)});
+$("#go").onclick=practice;$("#pt").onchange=$("#pth").onchange=practice;
+["bk","bt","bth"].forEach(i=>$("#"+i).addEventListener("input",browse));
+$("#f").addEventListener("submit",submit);
+$("#repo").href=`https://github.com/${REPO}`;
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{location.hash=b.dataset.t});
+addEventListener("hashchange",tab);browse();tab()
+})();
+</script>
+</body>
+</html>
