@@ -53,13 +53,18 @@ How a submission flows:
 4. **Accept submission** runs: it assigns the id and date, appends the row to `quotes.csv`,
    commits, and closes the issue with a thank-you. To decline, just close the issue with a comment.
 
-One-time setup: set `REPO` in `quotebank.py`, and create the labels
-`quote-submission`, `needs-fix`, `ready-for-review` and `approved`.
+One-time setup: in **Settings → Actions → General → Workflow permissions**, allow
+**Read and write permissions** so the approval workflow can commit the CSV. The
+workflows create the `quote-submission`, `needs-fix` and `ready-for-review` labels
+when the first quote is submitted. Create an `approved` label (for example, grey)
+for maintainers to use after reviewing a submission. Only the repository owner
+can trigger the CSV import by adding that label.
 
+The issue form and workflows must live at the repository root in `.github/`.
 After editing `quotebank/themes.txt` or `quotebank/tags.txt`, run
-`python quotebank/scripts/build_issue_template.py` from the repository root and commit
-the regenerated root-level `.github/ISSUE_TEMPLATE/submit-quote.yml` form. Run `python quotebank.py validate` before merging any pull request
-that touches the data files (a workflow also does this automatically).
+`python quotebank/scripts/build_issue_template.py` from the repository root and
+commit the regenerated `.github/ISSUE_TEMPLATE/submit-quote.yml` form. Run
+`python quotebank/quotebank.py validate` before merging changes to the data files.
 `scripts/migrate_xlsx.py` was used once to import the original Excel workbook.
 
 ## Licence

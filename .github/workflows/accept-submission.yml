@@ -1,0 +1,63 @@
+name: Accept approved quote
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+# Serialize approvals so two accepted submissions cannot overwrite each other.
+concurrency:
+  group: quote-bank-csv-import
+  cancel-in-progress: false
+
+jobs:
+  accept:
+    # Only the repository owner can approve a quote for CSV import.
+    if: >-
+      github.event.label.name == 'approved' &&
+      github.event.sender.login == github.repository_owner &&
+      startsWith(github.event.issue.title, 'Quote:') &&
+      contains(github.event.issue.labels.*.name, 'ready-for-review')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Import approved quote
+        id: import
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          COMMENT_FILE: comment.md
+        run: python quotebank/scripts/import_issue.py add
+
+      - name: Commit updated quote bank
+        if: steps.import.outputs.status == 'added'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add quotebank/quotes.csv
+          git commit -m "Add approved quote ${{ steps.import.outputs.quote_id }}"
+          git push
+
+      - name: Thank contributor and close issue
+        if: steps.import.outputs.status == 'added'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --body-file comment.md
+          gh issue close "${{ github.event.issue.number }}"
+
+      - name: Report import validation failure
+        if: steps.import.outputs.status == 'invalid'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh issue comment "${{ github.event.issue.number }}" --body-file comment.md

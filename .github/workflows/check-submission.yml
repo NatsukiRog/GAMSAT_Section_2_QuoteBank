@@ -1,0 +1,57 @@
+name: Check quote submission
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    # Only process quote submissions created from the quote-bank form.
+    if: startsWith(github.event.issue.title, 'Quote:')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate submission
+        id: validate
+        working-directory: .
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          COMMENT_FILE: comment.md
+        run: python quotebank/scripts/import_issue.py check
+
+      - name: Ensure submission labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/labels" -f name='quote-submission' -f color='1d76db' -f description='Quote bank contribution' || true
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/labels" -f name='needs-fix' -f color='d93f0b' -f description='Submission needs changes' || true
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/labels" -f name='ready-for-review' -f color='0e8a16' -f description='Valid submission awaiting review' || true
+          gh issue edit "${{ github.event.issue.number }}" --add-label 'quote-submission'
+
+      - name: Mark valid submission for review
+        if: steps.validate.outputs.status == 'valid'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue edit "${{ github.event.issue.number }}" --add-label 'ready-for-review' --remove-label 'needs-fix,approved'
+          gh issue comment "${{ github.event.issue.number }}" --body-file comment.md
+
+      - name: Mark invalid submission
+        if: steps.validate.outputs.status == 'invalid'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue edit "${{ github.event.issue.number }}" --add-label 'needs-fix' --remove-label 'ready-for-review'
+          gh issue comment "${{ github.event.issue.number }}" --body-file comment.md
