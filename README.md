@@ -1,4 +1,4 @@
-# GAMSAT Section 2 Quote Bank
+# GAMSAT Section 2 Quote Bank (How To Use It)
 
 A community quote bank for GAMSAT Section 2 essay practice. Quotes are tagged by
 theme and by suitability for Task A, Task B or both.
