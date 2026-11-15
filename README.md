@@ -3,6 +3,8 @@
 A community quote bank for GAMSAT Section 2 essay practice. Quotes are tagged by
 theme and by suitability for Task A, Task B or both.
 
+The Aim of the Game here is to have a BUNCH of high quality quotes we can use for endless essay practicing fun :)
+
 ## Use it on the web
 
 **https://NatsukiRog.github.io/GAMSAT_Section_2_QuoteBank/** : practice sets, search and
