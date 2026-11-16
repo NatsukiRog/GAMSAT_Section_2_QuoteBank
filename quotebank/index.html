@@ -21,7 +21,8 @@ nav button[aria-selected=true]{color:var(--ink);border-color:var(--acc)}
 label{display:flex;flex-direction:column;font-size:.85rem;color:var(--mute);gap:4px;flex:1 1 180px}
 .field{display:flex;flex-direction:column;font-size:.85rem;color:var(--mute);gap:4px;flex:1 1 180px}
 select,input,textarea{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%}
-.theme-select{position:relative;margin:0;font-size:1rem}
+.theme-select{position:relative;margin:0;font-size:inherit}
+#pt,.theme-select>summary{height:42px}
 .theme-select>summary{list-style:none;cursor:pointer;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:9px 10px}
 .theme-select>summary::-webkit-details-marker{display:none}
 .theme-select>summary::after{content:"▾";float:right;color:var(--mute)}
