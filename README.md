@@ -4,6 +4,7 @@ A community quote bank for GAMSAT Section 2 essay practice. Quotes are tagged by
 theme and by suitability for Task A, Task B or both.
 
 The Aim of the Game here is to have a BUNCH of high quality quotes we can use for endless essay practicing fun :)
+The best way to find quotes is by finding them in the wild, either by reading literature or in the news. Maybe even in a TV show or a Movie.
 
 ## Use it on the web
 
